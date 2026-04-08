@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
@@ -20,36 +19,48 @@ public class FurnitureDragPlacer : MonoBehaviour
     private GameObject prefabActual;
     private bool arrastrando = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    private int touchId = -1;
 
     void OnEnable()
     {
         EnhancedTouchSupport.Enable();
+        Touch.onFingerDown += OnFingerDown;
+        Touch.onFingerMove += OnFingerMove;
+        Touch.onFingerUp += OnFingerUp;
     }
 
     void OnDisable()
     {
+        Touch.onFingerDown -= OnFingerDown;
+        Touch.onFingerMove -= OnFingerMove;
+        Touch.onFingerUp -= OnFingerUp;
         EnhancedTouchSupport.Disable();
     }
 
-    void Update()
+    private void OnFingerDown(Finger finger)
     {
-        if (!arrastrando || previewInstance == null) return;
-        if (Touch.activeTouches.Count == 0) return;
+        if (!arrastrando) return;
+        if (touchId != -1) return;
 
-        Touch toque = Touch.activeTouches[0];
+        touchId = finger.index;
+        ActualizarPreview(finger.currentTouch.screenPosition);
+    }
 
-        switch (toque.phase)
-        {
-            case UnityEngine.InputSystem.TouchPhase.Moved:
-            case UnityEngine.InputSystem.TouchPhase.Stationary:
-                ActualizarPreview(toque.screenPosition);
-                break;
+    private void OnFingerMove(Finger finger)
+    {
+        if (!arrastrando) return;
+        if (finger.index != touchId) return;
 
-            case UnityEngine.InputSystem.TouchPhase.Ended:
-            case UnityEngine.InputSystem.TouchPhase.Canceled:
-                FinalizarArrastre();
-                break;
-        }
+        ActualizarPreview(finger.currentTouch.screenPosition);
+    }
+
+    private void OnFingerUp(Finger finger)
+    {
+        if (!arrastrando) return;
+        if (finger.index != touchId) return;
+
+        FinalizarArrastre();
+        touchId = -1;
     }
 
     public void IniciarArrastre(GameObject prefab)
@@ -65,7 +76,11 @@ public class FurnitureDragPlacer : MonoBehaviour
             previewController = previewInstance.AddComponent<PlacementPreview>();
 
         previewController.Inicializar(materialValido, materialInvalido);
+
         arrastrando = true;
+        touchId = -1;
+
+        Debug.Log("Arrastre iniciado, mueve el dedo sobre el plano");
     }
 
     private void ActualizarPreview(Vector2 posicionPantalla)
@@ -75,9 +90,7 @@ public class FurnitureDragPlacer : MonoBehaviour
             Pose hitPose = hits[0].pose;
             previewInstance.transform.position = hitPose.position;
             previewInstance.transform.rotation = hitPose.rotation;
-
-            bool sinSolapamiento = !HaySolapamiento();
-            previewController.SetValido(sinSolapamiento);
+            previewController.SetValido(!HaySolapamiento());
         }
         else
         {
@@ -88,7 +101,6 @@ public class FurnitureDragPlacer : MonoBehaviour
     private bool HaySolapamiento()
     {
         Bounds bounds = CalcularBounds(previewInstance);
-
         Collider[] colliders = Physics.OverlapBox(
             bounds.center,
             bounds.extents * 0.85f,
@@ -101,7 +113,6 @@ public class FurnitureDragPlacer : MonoBehaviour
                 !col.transform.IsChildOf(previewInstance.transform))
                 return true;
         }
-
         return false;
     }
 
@@ -112,7 +123,6 @@ public class FurnitureDragPlacer : MonoBehaviour
             Instantiate(prefabActual,
                 previewInstance.transform.position,
                 previewInstance.transform.rotation);
-
             Debug.Log("Mueble colocado correctamente");
         }
         else
