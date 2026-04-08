@@ -26,27 +26,22 @@ public class FurnitureMenuUI : MonoBehaviour
         {
             GameObject itemUI = Instantiate(itemPrefabUI, contenedorItems);
 
-            // Asignar icono
-            Image icono = itemUI.transform.Find("Icono").GetComponent<Image>();
+            Image icono = itemUI.transform.Find("Icono")?.GetComponent<Image>();
             if (icono != null && mueble.iconoUI != null)
                 icono.sprite = mueble.iconoUI;
 
-            // Asignar nombre
-            TextMeshProUGUI nombre = itemUI.transform.Find("Nombre").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI nombre = itemUI.transform.Find("Nombre")?.GetComponent<TextMeshProUGUI>();
             if (nombre != null)
                 nombre.text = mueble.nombreMueble;
 
-            // Asignar evento de arrastre
             FurnitureItem muebleCapturado = mueble;
             EventTrigger trigger = itemUI.AddComponent<EventTrigger>();
-
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerDown;
             entry.callback.AddListener((_) =>
             {
-                dragPlacer.IniciarArrastre(muebleCapturado.prefab3D);
+                dragPlacer.SeleccionarMueble(muebleCapturado.prefab3D);
             });
-
             trigger.triggers.Add(entry);
         }
     }

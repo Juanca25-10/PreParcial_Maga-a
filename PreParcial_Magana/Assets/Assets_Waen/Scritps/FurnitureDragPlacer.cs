@@ -14,56 +14,66 @@ public class FurnitureDragPlacer : MonoBehaviour
     [SerializeField] private Material materialValido;
     [SerializeField] private Material materialInvalido;
 
+    [Header("UI")]
+    [SerializeField] private GameObject instruccionUI; // Texto "Mueve el celular y toca para colocar"
+
     private GameObject previewInstance;
     private PlacementPreview previewController;
     private GameObject prefabActual;
-    private bool arrastrando = false;
+    private bool modoColocacion = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
-    private int touchId = -1;
 
     void OnEnable()
     {
         EnhancedTouchSupport.Enable();
-        Touch.onFingerDown += OnFingerDown;
-        Touch.onFingerMove += OnFingerMove;
-        Touch.onFingerUp += OnFingerUp;
     }
 
     void OnDisable()
     {
-        Touch.onFingerDown -= OnFingerDown;
-        Touch.onFingerMove -= OnFingerMove;
-        Touch.onFingerUp -= OnFingerUp;
         EnhancedTouchSupport.Disable();
     }
 
-    private void OnFingerDown(Finger finger)
+    void Update()
     {
-        if (!arrastrando) return;
-        if (touchId != -1) return;
+        if (!modoColocacion || previewInstance == null) return;
 
-        touchId = finger.index;
-        ActualizarPreview(finger.currentTouch.screenPosition);
+        ActualizarPreviewCentro();
+        DetectarToqueColocacion();
     }
 
-    private void OnFingerMove(Finger finger)
+    // El preview sigue el centro de la pantalla (donde apunta la camara)
+    private void ActualizarPreviewCentro()
     {
-        if (!arrastrando) return;
-        if (finger.index != touchId) return;
+        Vector2 centroPantalla = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
-        ActualizarPreview(finger.currentTouch.screenPosition);
+        if (raycastManager.Raycast(centroPantalla, hits, TrackableType.PlaneWithinPolygon))
+        {
+            Pose hitPose = hits[0].pose;
+            previewInstance.transform.position = hitPose.position;
+            previewInstance.transform.rotation = hitPose.rotation;
+            previewController.SetValido(!HaySolapamiento());
+        }
+        else
+        {
+            previewController.SetValido(false);
+        }
     }
 
-    private void OnFingerUp(Finger finger)
+    private void DetectarToqueColocacion()
     {
-        if (!arrastrando) return;
-        if (finger.index != touchId) return;
+        if (Touch.activeTouches.Count == 0) return;
 
-        FinalizarArrastre();
-        touchId = -1;
+        Touch toque = Touch.activeTouches[0];
+        if (toque.phase != UnityEngine.InputSystem.TouchPhase.Began) return;
+
+        if (previewController.EsValido())
+        {
+            ConfirmarColocacion();
+        }
     }
 
-    public void IniciarArrastre(GameObject prefab)
+    // Llamado desde FurnitureMenuUI al tocar un item
+    public void SeleccionarMueble(GameObject prefab)
     {
         if (previewInstance != null)
             Destroy(previewInstance);
@@ -77,25 +87,28 @@ public class FurnitureDragPlacer : MonoBehaviour
 
         previewController.Inicializar(materialValido, materialInvalido);
 
-        arrastrando = true;
-        touchId = -1;
+        modoColocacion = true;
 
-        Debug.Log("Arrastre iniciado, mueve el dedo sobre el plano");
+        if (instruccionUI != null)
+            instruccionUI.SetActive(true);
+
+        Debug.Log("Mueble seleccionado, apunta al suelo y toca para colocar");
     }
 
-    private void ActualizarPreview(Vector2 posicionPantalla)
+    private void ConfirmarColocacion()
     {
-        if (raycastManager.Raycast(posicionPantalla, hits, TrackableType.PlaneWithinPolygon))
-        {
-            Pose hitPose = hits[0].pose;
-            previewInstance.transform.position = hitPose.position;
-            previewInstance.transform.rotation = hitPose.rotation;
-            previewController.SetValido(!HaySolapamiento());
-        }
-        else
-        {
-            previewController.SetValido(false);
-        }
+        Instantiate(prefabActual,
+            previewInstance.transform.position,
+            previewInstance.transform.rotation);
+
+        Debug.Log("Mueble colocado");
+
+        Destroy(previewInstance);
+        previewInstance = null;
+        modoColocacion = false;
+
+        if (instruccionUI != null)
+            instruccionUI.SetActive(false);
     }
 
     private bool HaySolapamiento()
@@ -116,25 +129,6 @@ public class FurnitureDragPlacer : MonoBehaviour
         return false;
     }
 
-    private void FinalizarArrastre()
-    {
-        if (previewController != null && previewController.EsValido())
-        {
-            Instantiate(prefabActual,
-                previewInstance.transform.position,
-                previewInstance.transform.rotation);
-            Debug.Log("Mueble colocado correctamente");
-        }
-        else
-        {
-            Debug.Log("Posicion invalida, objeto no colocado");
-        }
-
-        Destroy(previewInstance);
-        previewInstance = null;
-        arrastrando = false;
-    }
-
     private Bounds CalcularBounds(GameObject obj)
     {
         Renderer[] rs = obj.GetComponentsInChildren<Renderer>();
@@ -143,7 +137,6 @@ public class FurnitureDragPlacer : MonoBehaviour
         Bounds bounds = rs[0].bounds;
         foreach (var r in rs)
             bounds.Encapsulate(r.bounds);
-
         return bounds;
     }
 }
