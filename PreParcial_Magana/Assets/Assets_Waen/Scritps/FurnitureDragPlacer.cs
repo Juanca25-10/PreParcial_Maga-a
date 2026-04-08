@@ -14,14 +14,15 @@ public class FurnitureDragPlacer : MonoBehaviour
     [SerializeField] private Material materialValido;
     [SerializeField] private Material materialInvalido;
 
-    [Header("UI")]
-    [SerializeField] private GameObject instruccionUI; // Texto "Mueve el celular y toca para colocar"
-
     private GameObject previewInstance;
     private PlacementPreview previewController;
     private GameObject prefabActual;
     private bool modoColocacion = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+    // Evita que el toque del menu tambien coloque el mueble
+    private int frameSeleccion = -1;
+    private const int FRAMES_ESPERA = 10;
 
     void OnEnable()
     {
@@ -38,10 +39,14 @@ public class FurnitureDragPlacer : MonoBehaviour
         if (!modoColocacion || previewInstance == null) return;
 
         ActualizarPreviewCentro();
-        DetectarToqueColocacion();
+
+        // Espera unos frames antes de aceptar toque de colocacion
+        if (Time.frameCount - frameSeleccion > FRAMES_ESPERA)
+        {
+            DetectarToqueColocacion();
+        }
     }
 
-    // El preview sigue el centro de la pantalla (donde apunta la camara)
     private void ActualizarPreviewCentro()
     {
         Vector2 centroPantalla = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -51,7 +56,7 @@ public class FurnitureDragPlacer : MonoBehaviour
             Pose hitPose = hits[0].pose;
             previewInstance.transform.position = hitPose.position;
             previewInstance.transform.rotation = hitPose.rotation;
-            previewController.SetValido(!HaySolapamiento());
+            previewController.SetValido(true);
         }
         else
         {
@@ -70,11 +75,16 @@ public class FurnitureDragPlacer : MonoBehaviour
         {
             ConfirmarColocacion();
         }
+        else
+        {
+            Debug.Log("Apunta al suelo para colocar");
+        }
     }
 
-    // Llamado desde FurnitureMenuUI al tocar un item
     public void SeleccionarMueble(GameObject prefab)
     {
+        Debug.Log("SeleccionarMueble llamado: " + prefab.name);
+
         if (previewInstance != null)
             Destroy(previewInstance);
 
@@ -88,11 +98,9 @@ public class FurnitureDragPlacer : MonoBehaviour
         previewController.Inicializar(materialValido, materialInvalido);
 
         modoColocacion = true;
+        frameSeleccion = Time.frameCount;
 
-        if (instruccionUI != null)
-            instruccionUI.SetActive(true);
-
-        Debug.Log("Mueble seleccionado, apunta al suelo y toca para colocar");
+        Debug.Log("Preview creado, mueve el celular y toca para colocar");
     }
 
     private void ConfirmarColocacion()
@@ -101,42 +109,10 @@ public class FurnitureDragPlacer : MonoBehaviour
             previewInstance.transform.position,
             previewInstance.transform.rotation);
 
-        Debug.Log("Mueble colocado");
+        Debug.Log("Mueble colocado en: " + previewInstance.transform.position);
 
         Destroy(previewInstance);
         previewInstance = null;
         modoColocacion = false;
-
-        if (instruccionUI != null)
-            instruccionUI.SetActive(false);
-    }
-
-    private bool HaySolapamiento()
-    {
-        Bounds bounds = CalcularBounds(previewInstance);
-        Collider[] colliders = Physics.OverlapBox(
-            bounds.center,
-            bounds.extents * 0.85f,
-            previewInstance.transform.rotation
-        );
-
-        foreach (var col in colliders)
-        {
-            if (col.gameObject != previewInstance &&
-                !col.transform.IsChildOf(previewInstance.transform))
-                return true;
-        }
-        return false;
-    }
-
-    private Bounds CalcularBounds(GameObject obj)
-    {
-        Renderer[] rs = obj.GetComponentsInChildren<Renderer>();
-        if (rs.Length == 0) return new Bounds(obj.transform.position, Vector3.one);
-
-        Bounds bounds = rs[0].bounds;
-        foreach (var r in rs)
-            bounds.Encapsulate(r.bounds);
-        return bounds;
     }
 }
