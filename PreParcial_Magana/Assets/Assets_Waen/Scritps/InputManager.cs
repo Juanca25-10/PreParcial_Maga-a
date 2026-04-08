@@ -50,7 +50,7 @@ public class InputManager : MonoBehaviour
 
     private void OnTapPerformed()
     {
-        Vector2 touchPosition = Pointer.current.position.ReadValue();
+        Vector2 touchPosition = tapAction.action.ReadValue<Vector2>();
 
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
 
