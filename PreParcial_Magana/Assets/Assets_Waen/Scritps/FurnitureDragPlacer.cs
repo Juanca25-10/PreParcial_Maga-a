@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class FurnitureDragPlacer : MonoBehaviour
 {
@@ -19,28 +21,37 @@ public class FurnitureDragPlacer : MonoBehaviour
     private bool arrastrando = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
+    void OnEnable()
+    {
+        EnhancedTouchSupport.Enable();
+    }
+
+    void OnDisable()
+    {
+        EnhancedTouchSupport.Disable();
+    }
+
     void Update()
     {
         if (!arrastrando || previewInstance == null) return;
-        if (Input.touchCount == 0) return;
+        if (Touch.activeTouches.Count == 0) return;
 
-        Touch toque = Input.GetTouch(0);
+        Touch toque = Touch.activeTouches[0];
 
         switch (toque.phase)
         {
-            case TouchPhase.Moved:
-            case TouchPhase.Stationary:
-                ActualizarPreview(toque.position);
+            case UnityEngine.InputSystem.TouchPhase.Moved:
+            case UnityEngine.InputSystem.TouchPhase.Stationary:
+                ActualizarPreview(toque.screenPosition);
                 break;
 
-            case TouchPhase.Ended:
-            case TouchPhase.Canceled:
+            case UnityEngine.InputSystem.TouchPhase.Ended:
+            case UnityEngine.InputSystem.TouchPhase.Canceled:
                 FinalizarArrastre();
                 break;
         }
     }
 
-    // Llamado desde FurnitureMenuUI cuando el usuario toca un item del menu
     public void IniciarArrastre(GameObject prefab)
     {
         if (previewInstance != null)
@@ -59,14 +70,6 @@ public class FurnitureDragPlacer : MonoBehaviour
 
     private void ActualizarPreview(Vector2 posicionPantalla)
     {
-        // Si el dedo está sobre UI no raycasteamos
-        if (EventSystem.current != null &&
-            EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-        {
-            previewController.SetValido(false);
-            return;
-        }
-
         if (raycastManager.Raycast(posicionPantalla, hits, TrackableType.PlaneWithinPolygon))
         {
             Pose hitPose = hits[0].pose;

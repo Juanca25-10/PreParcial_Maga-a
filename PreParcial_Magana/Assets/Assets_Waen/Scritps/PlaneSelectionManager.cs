@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class PlaneSelectionManager : MonoBehaviour
 {
@@ -14,7 +17,7 @@ public class PlaneSelectionManager : MonoBehaviour
     [SerializeField] private GameObject reticle;
 
     [Header("UI")]
-    [SerializeField] private GameObject tapToPlaceUI; // texto "Toca para seleccionar"
+    [SerializeField] private GameObject tapToPlaceUI;
 
     [Header("Evento al seleccionar plano")]
     public UnityEvent<Pose> OnPlaneSelected;
@@ -22,6 +25,16 @@ public class PlaneSelectionManager : MonoBehaviour
     private bool planeSeleccionado = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
     private Pose posicionSeleccionada;
+
+    void OnEnable()
+    {
+        EnhancedTouchSupport.Enable();
+    }
+
+    void OnDisable()
+    {
+        EnhancedTouchSupport.Disable();
+    }
 
     void Update()
     {
@@ -31,7 +44,6 @@ public class PlaneSelectionManager : MonoBehaviour
         DetectarToque();
     }
 
-    // Mueve el reticle al centro de la pantalla cada frame
     private void ActualizarReticle()
     {
         Vector2 centroPantalla = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -58,15 +70,13 @@ public class PlaneSelectionManager : MonoBehaviour
         }
     }
 
-    // Detecta el toque del usuario para confirmar el plano
     private void DetectarToque()
     {
-        if (Input.touchCount == 0) return;
+        if (Touch.activeTouches.Count == 0) return;
 
-        Touch toque = Input.GetTouch(0);
-        if (toque.phase != TouchPhase.Began) return;
+        Touch toque = Touch.activeTouches[0];
+        if (toque.phase != UnityEngine.InputSystem.TouchPhase.Began) return;
 
-        // Solo confirma si el reticle está visible (hay plano válido)
         if (!reticle.activeSelf) return;
 
         ConfirmarPlano();
@@ -76,20 +86,15 @@ public class PlaneSelectionManager : MonoBehaviour
     {
         planeSeleccionado = true;
 
-        // Ocultar el reticle
         reticle.SetActive(false);
 
-        // Ocultar UI
         if (tapToPlaceUI != null)
             tapToPlaceUI.SetActive(false);
 
-        // Desactivar visualización de todos los planos detectados
         OcultarTodosLosPlanos();
 
-        // Detener detección de nuevos planos
         planeManager.enabled = false;
 
-        // Notificar al resto del sistema con la posición confirmada
         OnPlaneSelected?.Invoke(posicionSeleccionada);
 
         Debug.Log($"Plano seleccionado en: {posicionSeleccionada.position}");
@@ -103,7 +108,6 @@ public class PlaneSelectionManager : MonoBehaviour
         }
     }
 
-    // Método público para reiniciar la selección si el usuario quiere cambiar el plano
     public void ReiniciarSeleccion()
     {
         planeSeleccionado = false;
@@ -111,7 +115,5 @@ public class PlaneSelectionManager : MonoBehaviour
 
         if (tapToPlaceUI != null)
             tapToPlaceUI.SetActive(false);
-
-        Debug.Log("Selección de plano reiniciada");
     }
 }
