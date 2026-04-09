@@ -20,6 +20,12 @@ public class FurnitureInteraction : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Slider sliderB;
     [SerializeField] private UnityEngine.UI.Image previewColor;
 
+    private List<ARRaycastHit> hitsMovimiento = new List<ARRaycastHit>();
+    private Vector3 ultimaPosicionValida;
+
+    [Header("Camara")]
+    [SerializeField] private Camera arCamera;
+
     private GameObject muebleSeleccionado;
 
     // Velocidad de movimiento y rotacion
@@ -43,17 +49,27 @@ public class FurnitureInteraction : MonoBehaviour
     {
         if (muebleSeleccionado == null) return;
 
-        // Movimiento continuo mientras se mantiene presionado
-        if (moviendoAdelante)
-            muebleSeleccionado.transform.Translate(Vector3.forward * velocidadMovimiento, Space.World);
-        if (moviendoAtras)
-            muebleSeleccionado.transform.Translate(Vector3.back * velocidadMovimiento, Space.World);
-        if (moviendoIzquierda)
-            muebleSeleccionado.transform.Translate(Vector3.left * velocidadMovimiento, Space.World);
-        if (moviendoDerecha)
-            muebleSeleccionado.transform.Translate(Vector3.right * velocidadMovimiento, Space.World);
+        Vector3 posicionAntes = muebleSeleccionado.transform.position;
 
-        // Rotacion continua mientras se mantiene presionado
+        if (moviendoAdelante)
+            muebleSeleccionado.transform.Translate(Vector3.back * velocidadMovimiento, Space.World);
+        if (moviendoAtras)
+            muebleSeleccionado.transform.Translate(Vector3.forward * velocidadMovimiento, Space.World);
+        if (moviendoIzquierda)
+            muebleSeleccionado.transform.Translate(Vector3.right * velocidadMovimiento, Space.World);
+        if (moviendoDerecha)
+            muebleSeleccionado.transform.Translate(Vector3.left * velocidadMovimiento, Space.World);
+
+        // Si la nueva posicion no es valida, revertir al lugar anterior
+        if ((moviendoAdelante || moviendoAtras || moviendoIzquierda || moviendoDerecha))
+        {
+            if (!PosicionEsValida(muebleSeleccionado.transform.position))
+            {
+                muebleSeleccionado.transform.position = posicionAntes;
+                Debug.Log("Posicion invalida, movimiento bloqueado");
+            }
+        }
+
         if (rotandoIzquierda)
             muebleSeleccionado.transform.Rotate(Vector3.up, -velocidadRotacion * Time.deltaTime);
         if (rotandoDerecha)
@@ -143,5 +159,17 @@ public class FurnitureInteraction : MonoBehaviour
                 mat.color = color;
             r.materials = mats;
         }
+    }
+
+    private bool PosicionEsValida(Vector3 posicion)
+    {
+        // Proyecta desde arriba hacia abajo para verificar si hay plano debajo
+        Vector2 posicionPantalla = arCamera.WorldToScreenPoint(posicion);
+
+        if (raycastManager.Raycast(posicionPantalla, hitsMovimiento, TrackableType.PlaneWithinPolygon))
+        {
+            return true;
+        }
+        return false;
     }
 }
