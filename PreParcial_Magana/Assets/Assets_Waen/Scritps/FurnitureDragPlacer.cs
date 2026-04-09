@@ -54,6 +54,16 @@ public class FurnitureDragPlacer : MonoBehaviour
         if (raycastManager.Raycast(centroPantalla, hits, TrackableType.PlaneWithinPolygon))
         {
             Pose hitPose = hits[0].pose;
+
+            // Verifica que la superficie sea horizontal
+            // El vector up del plano debe apuntar hacia arriba
+            float anguloConVertical = Vector3.Angle(hitPose.up, Vector3.up);
+            if (anguloConVertical > 25f)
+            {
+                previewController.SetValido(false);
+                return;
+            }
+
             previewInstance.transform.position = hitPose.position;
             previewInstance.transform.rotation = hitPose.rotation;
             previewController.SetValido(true);
@@ -115,4 +125,6 @@ public class FurnitureDragPlacer : MonoBehaviour
         previewInstance = null;
         modoColocacion = false;
     }
+
+
 }

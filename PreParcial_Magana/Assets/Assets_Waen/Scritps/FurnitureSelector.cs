@@ -6,6 +6,7 @@ public class FurnitureSelector : MonoBehaviour
 {
     [SerializeField] private FurnitureInteraction interaction;
     [SerializeField] private Camera arCamera;
+    [SerializeField] private LayerMask capaMuebles;
 
     private bool modoSeleccion = false;
 
@@ -21,7 +22,7 @@ public class FurnitureSelector : MonoBehaviour
         if (toque.phase != UnityEngine.InputSystem.TouchPhase.Began) return;
 
         Ray ray = arCamera.ScreenPointToRay(toque.screenPosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, capaMuebles))
         {
             Transform root = hit.transform;
             while (root.parent != null)
