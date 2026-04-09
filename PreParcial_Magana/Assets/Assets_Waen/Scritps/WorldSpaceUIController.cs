@@ -27,15 +27,16 @@ public class WorldSpaceUIController : MonoBehaviour
     {
         if (!activo || objetoSeguido == null) return;
 
-        // Posicion: izquierda del objeto sin importar su rotacion
-        Vector3 direccionIzquierda = -arCamera.transform.right;
-        Vector3 posicionObjetivo = objetoSeguido.position
-            + direccionIzquierda * distanciaAlObjeto
-            + Vector3.up * alturaOffset;
+        Vector3 posicionObjetivo = UIPositionCalculator.CalcularPosicion(
+            objetoSeguido.position,
+            arCamera.transform.right,
+            distanciaAlObjeto,
+            alturaOffset
+        );
 
         transform.position = posicionObjetivo;
 
-        // Siempre mira a la camara pero sin inclinarse
+        // Siempre mira a la cámara pero sin inclinarse
         Vector3 direccionACamara = arCamera.transform.position - transform.position;
         direccionACamara.y = 0;
         transform.rotation = Quaternion.LookRotation(-direccionACamara);
