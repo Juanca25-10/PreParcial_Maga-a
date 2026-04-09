@@ -645,6 +645,7 @@ MonoBehaviour:
   sliderG: {fileID: 826486625}
   sliderB: {fileID: 1308841554}
   previewColor: {fileID: 1777587763}
+  arCamera: {fileID: 1701915455}
 --- !u!114 &215142484
 MonoBehaviour:
   m_ObjectHideFlags: 0
