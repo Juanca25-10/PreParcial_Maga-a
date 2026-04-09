@@ -26,6 +26,9 @@ public class FurnitureInteraction : MonoBehaviour
     [Header("Camara")]
     [SerializeField] private Camera arCamera;
 
+    [Header("World Space UI")]
+    [SerializeField] private WorldSpaceUIController worldUI;
+
     private GameObject muebleSeleccionado;
 
     // Velocidad de movimiento y rotacion
@@ -81,15 +84,15 @@ public class FurnitureInteraction : MonoBehaviour
     public void SeleccionarMueble(GameObject mueble)
     {
         muebleSeleccionado = mueble;
-        panelInteraccion.SetActive(true);
         CerrarSubPaneles();
+        worldUI.Mostrar(mueble.transform);
         Debug.Log("Mueble seleccionado: " + mueble.name);
     }
 
     public void Deseleccionar()
     {
         muebleSeleccionado = null;
-        panelInteraccion.SetActive(false);
+        worldUI.Ocultar();
         CerrarSubPaneles();
         DetenerTodo();
     }
