@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
@@ -26,15 +25,8 @@ public class PlaneSelectionManager : MonoBehaviour
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
     private Pose posicionSeleccionada;
 
-    void OnEnable()
-    {
-        EnhancedTouchSupport.Enable();
-    }
-
-    void OnDisable()
-    {
-        EnhancedTouchSupport.Disable();
-    }
+    void OnEnable() => EnhancedTouchSupport.Enable();
+    void OnDisable() => EnhancedTouchSupport.Disable();
 
     void Update()
     {
@@ -52,6 +44,12 @@ public class PlaneSelectionManager : MonoBehaviour
         {
             Pose hitPose = hits[0].pose;
 
+            if (!PlaneValidator.EsPlanoHorizontal(hitPose))
+            {
+                OcultarReticle();
+                return;
+            }
+
             reticle.SetActive(true);
             reticle.transform.position = hitPose.position;
             reticle.transform.rotation = hitPose.rotation;
@@ -63,20 +61,22 @@ public class PlaneSelectionManager : MonoBehaviour
         }
         else
         {
-            reticle.SetActive(false);
-
-            if (tapToPlaceUI != null)
-                tapToPlaceUI.SetActive(false);
+            OcultarReticle();
         }
+    }
+
+    private void OcultarReticle()
+    {
+        reticle.SetActive(false);
+        if (tapToPlaceUI != null)
+            tapToPlaceUI.SetActive(false);
     }
 
     private void DetectarToque()
     {
         if (Touch.activeTouches.Count == 0) return;
-
         Touch toque = Touch.activeTouches[0];
         if (toque.phase != UnityEngine.InputSystem.TouchPhase.Began) return;
-
         if (!reticle.activeSelf) return;
 
         ConfirmarPlano();
@@ -85,18 +85,11 @@ public class PlaneSelectionManager : MonoBehaviour
     private void ConfirmarPlano()
     {
         planeSeleccionado = true;
-
-        reticle.SetActive(false);
-
-        if (tapToPlaceUI != null)
-            tapToPlaceUI.SetActive(false);
-
+        OcultarReticle();
         OcultarTodosLosPlanos();
-
         planeManager.enabled = false;
 
         OnPlaneSelected?.Invoke(posicionSeleccionada);
-
         Debug.Log($"Plano seleccionado en: {posicionSeleccionada.position}");
     }
 
@@ -112,8 +105,6 @@ public class PlaneSelectionManager : MonoBehaviour
     {
         planeSeleccionado = false;
         planeManager.enabled = true;
-
-        if (tapToPlaceUI != null)
-            tapToPlaceUI.SetActive(false);
+        if (tapToPlaceUI != null) tapToPlaceUI.SetActive(false);
     }
 }
