@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureItem
   nombreMueble: Escritorio
   prefab3D: {fileID: 3495399803216725106, guid: fa6902c58b659b941bf6960acbe08d73, type: 3}
-  iconoUI: {fileID: 0}
+  iconoUI: {fileID: 21300000, guid: 1e6d0d9a45e82764089a6423c22ed6e5, type: 3}

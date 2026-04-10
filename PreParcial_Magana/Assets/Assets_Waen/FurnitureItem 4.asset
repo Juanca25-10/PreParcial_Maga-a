@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureItem
   nombreMueble: Sala Completa
   prefab3D: {fileID: 1651780213475470466, guid: 4756b8aa5039b1a48914023ce02584b4, type: 3}
-  iconoUI: {fileID: 0}
+  iconoUI: {fileID: 21300000, guid: e1732424cb8c94948a1660dce38f56cf, type: 3}

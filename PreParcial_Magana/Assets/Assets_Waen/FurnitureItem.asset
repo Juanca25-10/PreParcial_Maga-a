@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureItem
   nombreMueble: Silla Comedor
   prefab3D: {fileID: 2919631788917438095, guid: e648df5081c1faf4fb2e9549bbdfd334, type: 3}
-  iconoUI: {fileID: 0}
+  iconoUI: {fileID: 21300000, guid: a136d43c0280e8e488fd3ed658fe592a, type: 3}
