@@ -52,8 +52,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lampara_suelo
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3880360923915561015}
   m_SourcePrefab: {fileID: 100100000, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
+--- !u!1 &4088703231168209755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
+  m_PrefabInstance: {fileID: 3782060776291360266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3880360923915561015
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4088703231168209755}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.70206106, y: 1.9203789, z: 0.4044458}
+  m_Center: {x: 0.0000047534704, y: 0.96018934, z: 0.00000013411045}

@@ -3,7 +3,172 @@ guid: f08f0743a55d43f41acfdc3f18f52f98
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coffee_Cup_-_Coffee
+    second: {fileID: 2100000, guid: 536942aca20f23942ab5c52cc60f58ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coffee_Cup_-_Foam
+    second: {fileID: 2100000, guid: 43fdaec18b2d7a54e940e48430b2c734, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coffee_Cup_-_Glass
+    second: {fileID: 2100000, guid: 1862bba86f8088a4b857ad60c99f0681, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coffee_Cup_-_Metal
+    second: {fileID: 2100000, guid: 5aef1509483d6bb45b925ceb9e4a0f6d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fabric.001
+    second: {fileID: 2100000, guid: 86a802b386a58a14a85223a7169a14a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fabric.002
+    second: {fileID: 2100000, guid: c1caae4a9052ab242b49baf1a80f295e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fabric_Upholstery_001a.001
+    second: {fileID: 2100000, guid: d1c8b5bae92bb7e4aad6ac127c959b3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grapes_of_Wrath
+    second: {fileID: 2100000, guid: 091e7f08ddd394749b5731f0867a0767, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampion_-_Alu
+    second: {fileID: 2100000, guid: 56fcbd1114007ec4dbd95f724eaffb3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampion_-_Cire
+    second: {fileID: 2100000, guid: 0f1d3df779022e64dadcead9d0dd82f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampion_-_Flamme
+    second: {fileID: 2100000, guid: c0aaa666bb4f1854ba0d6686a7cbb6af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampion_-_mche
+    second: {fileID: 2100000, guid: b5a0405156823db47a34265fe3edeec1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 93bda6221b68b874ebc5c9e6f53847d7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: b79980a4e61fe484a81fb739040eb084, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.007
+    second: {fileID: 2100000, guid: 6daa7230f06974c4285b0d60ddb7f49f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.008
+    second: {fileID: 2100000, guid: faa238e42aac8724a841fdc270c3a280, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.009
+    second: {fileID: 2100000, guid: 0a8999e6e5de17b44b7c972e33528afd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.010
+    second: {fileID: 2100000, guid: 94a9e1f74369e654ca820bd0ec139392, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.012
+    second: {fileID: 2100000, guid: 8f400d117460cd94aa3208e1238f3c4a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.021
+    second: {fileID: 2100000, guid: 3c377d91c8a9b18468133b1eacadbd58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tecido
+    second: {fileID: 2100000, guid: 27fbf94ba602cbb4eaacb64a87d68f14, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover
+    second: {fileID: 2100000, guid: 2be427ceb890109439b0892a4dca407a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover.001
+    second: {fileID: 2100000, guid: d74d9cb17e842db4cb1bf80d57c7ada7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover.002
+    second: {fileID: 2100000, guid: 052baddd531715542a5dcdda3b1aa760, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover.003
+    second: {fileID: 2100000, guid: 9446cf63bb0cf4a41934e35573a82dce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover.004
+    second: {fileID: 2100000, guid: 017970fbca1493346865a633a69cdc5b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book_cover.005
+    second: {fileID: 2100000, guid: 8e0dbd50e3ff8484d9476a3e5353a359, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.001
+    second: {fileID: 2100000, guid: a375999b959038043a27a397da89a516, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.002
+    second: {fileID: 2100000, guid: 2d1b5f18a1074ae47ad6564f364b8007, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.003
+    second: {fileID: 2100000, guid: b7242eb2e0c11004cb02b232bd37f86f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.004
+    second: {fileID: 2100000, guid: ca10d9aad433a374aa98186b9f479ffd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.005
+    second: {fileID: 2100000, guid: e61adebdc57edd3429a7c568f8a74644, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked_paper.006
+    second: {fileID: 2100000, guid: 8b7fa5371944c224f89ebbdfa38e7d81, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
