@@ -3,7 +3,42 @@ guid: 81dda6f4ff8f928448aeb59e63698760
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book-Type_1
+    second: {fileID: 2100000, guid: 7f177c8fc092c7f44b792ef4713316c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book-Type_2
+    second: {fileID: 2100000, guid: 9d82286f07e86b049b1cbfbad1f4f61f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Desk
+    second: {fileID: 2100000, guid: c6cd58ae1af62b74f96f89fba5fedc77, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lamp_Decorative
+    second: {fileID: 2100000, guid: eb84ff0d61aec2b42bb39ebcf1050ca1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Photography-Type_1
+    second: {fileID: 2100000, guid: 001d0520f384de240bd0585d0dc80a3f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Photography-Type_2
+    second: {fileID: 2100000, guid: ba3d87ff7ab7512459ad48a01ccdf535, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Table-Lamp
+    second: {fileID: 2100000, guid: 7e227fa7785d06a40b325f93dc15cdd8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
