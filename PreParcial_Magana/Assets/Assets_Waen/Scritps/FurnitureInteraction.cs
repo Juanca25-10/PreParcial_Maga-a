@@ -28,6 +28,10 @@ public class FurnitureInteraction : MonoBehaviour
 
     [Header("World Space UI")]
     [SerializeField] private WorldSpaceUIController worldUI;
+    [Header("Efecto de Selección")]
+    [SerializeField] private Color colorResalte = new Color(0.2f, 0.6f, 1f, 1f);
+
+    private Dictionary<Material, Color> coloresOriginales = new Dictionary<Material, Color>();
 
     private GameObject muebleSeleccionado;
 
@@ -83,18 +87,74 @@ public class FurnitureInteraction : MonoBehaviour
 
     public void SeleccionarMueble(GameObject mueble)
     {
+        // Si intentamos seleccionar el mismo, no hacemos nada
+        if (muebleSeleccionado == mueble) return;
+
+        // Si había otro seleccionado antes, lo deseleccionamos primero
+        if (muebleSeleccionado != null) Deseleccionar();
+
         muebleSeleccionado = mueble;
+
+        // Mostrar la UI
         CerrarSubPaneles();
         worldUI.Mostrar(mueble.transform);
-        Debug.Log("Mueble seleccionado: " + mueble.name);
+
+        // Aplicar el efecto azul
+        AplicarResalteAzul();
+
+        Debug.Log("Mueble seleccionado por Gaze: " + mueble.name);
     }
 
     public void Deseleccionar()
     {
+        if (muebleSeleccionado != null)
+        {
+            RestaurarColoresOriginales();
+        }
+
         muebleSeleccionado = null;
         worldUI.Ocultar();
         CerrarSubPaneles();
         DetenerTodo();
+    }
+
+    // ─── Lógica Visual ────────────────────────────────────
+
+    private void AplicarResalteAzul()
+    {
+        coloresOriginales.Clear();
+        Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer r in renderers)
+        {
+            foreach (Material mat in r.materials)
+            {
+                if (!coloresOriginales.ContainsKey(mat))
+                {
+                    if (mat.HasProperty("_Color") || mat.HasProperty("_BaseColor"))
+                    {
+                        coloresOriginales[mat] = mat.color;
+                        mat.color = colorResalte;
+                    }
+                }
+            }
+        }
+    }
+
+    private void RestaurarColoresOriginales()
+    {
+        Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer r in renderers)
+        {
+            foreach (Material mat in r.materials)
+            {
+                if (coloresOriginales.TryGetValue(mat, out Color colorOriginal))
+                {
+                    mat.color = colorOriginal;
+                }
+            }
+        }
     }
 
     // ─── Navegacion de subpaneles ─────────────────────────

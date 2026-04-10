@@ -1,38 +1,45 @@
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class FurnitureSelector : MonoBehaviour
 {
+    [Header("Referencias")]
     [SerializeField] private FurnitureInteraction interaction;
     [SerializeField] private Camera arCamera;
+
+    [Header("Configuración de Selección")]
     [SerializeField] private LayerMask capaMuebles;
+    [SerializeField] private float distanciaMaxima = 5f;
 
-    private bool modoSeleccion = false;
-
-    void OnEnable() => EnhancedTouchSupport.Enable();
-    void OnDisable() => EnhancedTouchSupport.Disable();
+    private GameObject muebleMirandoActualmente = null;
 
     void Update()
     {
-        if (!modoSeleccion) return;
-        if (Touch.activeTouches.Count == 0) return;
+        Vector2 centroPantalla = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = arCamera.ScreenPointToRay(centroPantalla);
 
-        Touch toque = Touch.activeTouches[0];
-        if (toque.phase != UnityEngine.InputSystem.TouchPhase.Began) return;
-
-        Ray ray = arCamera.ScreenPointToRay(toque.screenPosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, capaMuebles))
+        if (Physics.Raycast(ray, out RaycastHit hit, distanciaMaxima, capaMuebles))
         {
             Transform root = hit.transform;
-            while (root.parent != null)
+            while (root.parent != null && root.GetComponent<FurnitureInteraction>() == null)
+            {
                 root = root.parent;
+            }
 
-            interaction.SeleccionarMueble(root.gameObject);
-            modoSeleccion = false;
+            GameObject muebleDetectado = root.gameObject;
+
+            if (muebleMirandoActualmente != muebleDetectado)
+            {
+                interaction.SeleccionarMueble(muebleDetectado);
+                muebleMirandoActualmente = muebleDetectado;
+            }
+        }
+        else
+        {
+            if (muebleMirandoActualmente != null)
+            {
+                interaction.Deseleccionar();
+                muebleMirandoActualmente = null;
+            }
         }
     }
-
-    public void ActivarModoSeleccion() => modoSeleccion = true;
-    public void Cancelar() => modoSeleccion = false;
 }
