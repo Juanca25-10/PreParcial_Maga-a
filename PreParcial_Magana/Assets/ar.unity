@@ -1281,8 +1281,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4098,6 +4098,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureMenuUI
   muebles:
   - {fileID: 11400000, guid: 1e79f3d0286210f45ba840cc6fb85d44, type: 2}
+  - {fileID: 11400000, guid: 4270c164ff4d23c46baeec9a29a4656c, type: 2}
+  - {fileID: 11400000, guid: d8316abe3f0eeb140b4f8664817b3d83, type: 2}
+  - {fileID: 11400000, guid: 2b94079eda965d749b2baec0939c48f6, type: 2}
+  - {fileID: 11400000, guid: 621df8c31a5c60440968c8ffa7e5c6a4, type: 2}
+  - {fileID: 11400000, guid: 3f64fd16eafb8b74aaf7abbeeadd4f04, type: 2}
   contenedorItems: {fileID: 973554668}
   itemPrefabUI: {fileID: 6381799966266278163, guid: 8833c2fc9b114dc468a12baebdc6a6fc, type: 3}
   dragPlacer: {fileID: 215142482}
