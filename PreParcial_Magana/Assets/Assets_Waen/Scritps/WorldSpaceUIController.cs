@@ -3,17 +3,19 @@ using System.Collections;
 
 public class WorldSpaceUIController : MonoBehaviour
 {
-    [Header("Referencia a la camara")]
+    [Header("Referencia a la cámara")]
     [SerializeField] private Camera arCamera;
 
-    [Header("Configuracion de posicion")]
-    [SerializeField] private float distanciaAlObjeto = 0.6f;
+    [Header("Configuración de posición")]
+    [Tooltip("Distancia extra desde el borde del mueble")]
+    [SerializeField] private float margenExtra = 0.1f;
     [SerializeField] private float alturaOffset = 0.5f;
 
-    [Header("Animacion")]
+    [Header("Animación")]
     [SerializeField] private float duracionAnimacion = 0.25f;
 
     private Transform objetoSeguido;
+    private Collider colliderObjetivo;
     private bool activo = false;
     private Vector3 escalaOriginal;
 
@@ -27,16 +29,23 @@ public class WorldSpaceUIController : MonoBehaviour
     {
         if (!activo || objetoSeguido == null) return;
 
-        Vector3 posicionObjetivo = UIPositionCalculator.CalcularPosicion(
-            objetoSeguido.position,
-            arCamera.transform.right,
-            distanciaAlObjeto,
-            alturaOffset
-        );
+        Vector3 centroBase = objetoSeguido.position;
+        float radioObjeto = 0.3f;
+
+        if (colliderObjetivo != null)
+        {
+            centroBase = colliderObjetivo.bounds.center;
+
+            radioObjeto = Mathf.Max(colliderObjetivo.bounds.extents.x, colliderObjetivo.bounds.extents.z);
+        }
+
+        Vector3 direccionIzquierda = -arCamera.transform.right;
+        Vector3 posicionObjetivo = centroBase
+            + (direccionIzquierda * (radioObjeto + margenExtra))
+            + (Vector3.up * alturaOffset);
 
         transform.position = posicionObjetivo;
 
-        // Siempre mira a la cámara pero sin inclinarse
         Vector3 direccionACamara = arCamera.transform.position - transform.position;
         direccionACamara.y = 0;
         transform.rotation = Quaternion.LookRotation(-direccionACamara);
@@ -45,6 +54,8 @@ public class WorldSpaceUIController : MonoBehaviour
     public void Mostrar(Transform objetivo)
     {
         objetoSeguido = objetivo;
+        colliderObjetivo = objetivo.GetComponentInChildren<Collider>();
+
         activo = true;
         gameObject.SetActive(true);
         StopAllCoroutines();
@@ -67,7 +78,6 @@ public class WorldSpaceUIController : MonoBehaviour
         {
             tiempo += Time.deltaTime;
             float t = tiempo / duracionAnimacion;
-            // Curva elastica para el pop
             float escala = 1f + Mathf.Sin(t * Mathf.PI) * 0.15f;
             transform.localScale = escalaOriginal * Mathf.LerpUnclamped(0f, escala, t);
             yield return null;
