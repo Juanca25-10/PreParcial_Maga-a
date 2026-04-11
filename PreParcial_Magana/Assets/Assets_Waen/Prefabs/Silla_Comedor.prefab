@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61269e904ef911d429b52150de56c7b2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5054175912820173186}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61269e904ef911d429b52150de56c7b2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8704050533247386493}
   m_SourcePrefab: {fileID: 100100000, guid: 61269e904ef911d429b52150de56c7b2, type: 3}
 --- !u!1 &2919631788917438095 stripped
 GameObject:
@@ -90,3 +93,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5291985, y: 1.2210708, z: 0.6604271}
   m_Center: {x: 0.0016811043, y: 0.61105394, z: -0.36829305}
+--- !u!114 &8704050533247386493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2919631788917438095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8a7b61776e6a044b2e0d93f404ca02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FurnitureData
+  idMueble: 06_Silla_Comedor_1234
+  nombreMueble: Silla Comedor
+  precio: 169900

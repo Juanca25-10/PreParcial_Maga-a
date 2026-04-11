@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b4833fd8d38060e4e90a28849cf2d693, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1655965710996884437}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b4833fd8d38060e4e90a28849cf2d693, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8780611125023152768}
   m_SourcePrefab: {fileID: 100100000, guid: b4833fd8d38060e4e90a28849cf2d693, type: 3}
 --- !u!1 &6230137136200905474 stripped
 GameObject:
@@ -90,3 +93,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9388205, y: 0.87246907, z: 1.0340376}
   m_Center: {x: 0, y: 0.43623453, z: 0}
+--- !u!114 &8780611125023152768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6230137136200905474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8a7b61776e6a044b2e0d93f404ca02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FurnitureData
+  idMueble: 01_Comedor_1234
+  nombreMueble: Comedor
+  precio: 569900
