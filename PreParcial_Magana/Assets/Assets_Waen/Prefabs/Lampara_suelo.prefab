@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3880360923915561015}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8474907753943533698}
   m_SourcePrefab: {fileID: 100100000, guid: 3028777f8ef36c44cb677efd8de82256, type: 3}
 --- !u!1 &4088703231168209755 stripped
 GameObject:
@@ -90,3 +93,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.70206106, y: 1.7455451, z: 0.4044458}
   m_Center: {x: 0.0000047683716, y: 0.87277246, z: 0.00000013411045}
+--- !u!114 &8474907753943533698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4088703231168209755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8a7b61776e6a044b2e0d93f404ca02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FurnitureData
+  idMueble: 03_Lampara_Alta_1234
+  nombreMueble: Lampara Alta
+  precio: 99900
