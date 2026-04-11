@@ -32,21 +32,17 @@ public class FurnitureInteraction : MonoBehaviour
     [SerializeField] private Color colorResalte = new Color(0.2f, 0.6f, 1f, 1f);
 
     private Dictionary<Material, Color> coloresOriginales = new Dictionary<Material, Color>();
-
     private GameObject muebleSeleccionado;
 
-    // Velocidad de movimiento y rotacion
-    private float velocidadMovimiento = 0.005f;
-    private float velocidadRotacion = 60f;
+    // Velocidad aumentada para pruebas en PC
+    private float velocidadMovimiento = 0.5f;
+    private float velocidadRotacion = 100f;
 
-    // Flags para mantener presionado
-    private bool moviendoAdelante, moviendoAtras;
-    private bool moviendoIzquierda, moviendoDerecha;
+    private bool moviendoAdelante, moviendoAtras, moviendoIzquierda, moviendoDerecha;
     private bool rotandoIzquierda, rotandoDerecha;
 
     void Start()
     {
-        // Conectar sliders
         if (sliderR) sliderR.onValueChanged.AddListener((_) => ActualizarColor());
         if (sliderG) sliderG.onValueChanged.AddListener((_) => ActualizarColor());
         if (sliderB) sliderB.onValueChanged.AddListener((_) => ActualizarColor());
@@ -57,85 +53,72 @@ public class FurnitureInteraction : MonoBehaviour
         if (muebleSeleccionado == null) return;
 
         Vector3 posicionAntes = muebleSeleccionado.transform.position;
+        Vector3 movimiento = Vector3.zero;
 
-        if (moviendoAdelante)
-            muebleSeleccionado.transform.Translate(Vector3.back * velocidadMovimiento, Space.World);
-        if (moviendoAtras)
-            muebleSeleccionado.transform.Translate(Vector3.forward * velocidadMovimiento, Space.World);
-        if (moviendoIzquierda)
-            muebleSeleccionado.transform.Translate(Vector3.right * velocidadMovimiento, Space.World);
-        if (moviendoDerecha)
-            muebleSeleccionado.transform.Translate(Vector3.left * velocidadMovimiento, Space.World);
+        // --- CORRECCIÓN DE DIRECCIONES ---
+        // Adelante (Arriba en UI) -> Aleja del usuario
+        if (moviendoAdelante) movimiento += arCamera.transform.forward;
+        // Atrás (Abajo en UI) -> Acerca al usuario
+        if (moviendoAtras) movimiento -= arCamera.transform.forward;
+        // Izquierda (Izquierda en UI) -> Mueve a la izquierda de la pantalla
+        if (moviendoIzquierda) movimiento -= arCamera.transform.right;
+        // Derecha (Derecha en UI) -> Mueve a la derecha de la pantalla
+        if (moviendoDerecha) movimiento += arCamera.transform.right;
 
-        // Si la nueva posicion no es valida, revertir al lugar anterior
-        if ((moviendoAdelante || moviendoAtras || moviendoIzquierda || moviendoDerecha))
+        // Bloqueamos el eje Y para que no flote ni se hunda
+        movimiento.y = 0;
+
+        if (movimiento != Vector3.zero)
         {
+            // Aplicamos el movimiento normalizado para que no vaya más rápido en diagonal
+            muebleSeleccionado.transform.position += movimiento.normalized * velocidadMovimiento * Time.deltaTime;
+
+            // Verificación de posición (AR o Editor)
             if (!PosicionEsValida(muebleSeleccionado.transform.position))
             {
                 muebleSeleccionado.transform.position = posicionAntes;
-                Debug.Log("Posicion invalida, movimiento bloqueado");
             }
         }
 
+        // Rotación (Esta suele estar bien, pero asegúrate de que Space.Self sea lo que buscas)
         if (rotandoIzquierda)
             muebleSeleccionado.transform.Rotate(Vector3.up, -velocidadRotacion * Time.deltaTime);
         if (rotandoDerecha)
             muebleSeleccionado.transform.Rotate(Vector3.up, velocidadRotacion * Time.deltaTime);
     }
 
-    // ─── Seleccion ───────────────────────────────────────
-
     public void SeleccionarMueble(GameObject mueble)
     {
-        // Si intentamos seleccionar el mismo, no hacemos nada
         if (muebleSeleccionado == mueble) return;
-
-        // Si había otro seleccionado antes, lo deseleccionamos primero
         if (muebleSeleccionado != null) Deseleccionar();
-
         muebleSeleccionado = mueble;
 
-        // Mostrar la UI
         CerrarSubPaneles();
         worldUI.Mostrar(mueble.transform);
-
-        // Aplicar el efecto azul
         AplicarResalteAzul();
-
-        Debug.Log("Mueble seleccionado por Gaze: " + mueble.name);
     }
 
     public void Deseleccionar()
     {
-        if (muebleSeleccionado != null)
-        {
-            RestaurarColoresOriginales();
-        }
-
+        if (muebleSeleccionado != null) RestaurarColoresOriginales();
         muebleSeleccionado = null;
         worldUI.Ocultar();
         CerrarSubPaneles();
         DetenerTodo();
     }
 
-    // ─── Lógica Visual ────────────────────────────────────
-
     private void AplicarResalteAzul()
     {
         coloresOriginales.Clear();
         Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
-
         foreach (Renderer r in renderers)
         {
             foreach (Material mat in r.materials)
             {
-                if (!coloresOriginales.ContainsKey(mat))
+                if (mat.HasProperty("_Color") || mat.HasProperty("_BaseColor"))
                 {
-                    if (mat.HasProperty("_Color") || mat.HasProperty("_BaseColor"))
-                    {
-                        coloresOriginales[mat] = mat.color;
-                        mat.color = colorResalte;
-                    }
+                    coloresOriginales[mat] = mat.color;
+                    mat.color = colorResalte;
                 }
             }
         }
@@ -143,96 +126,51 @@ public class FurnitureInteraction : MonoBehaviour
 
     private void RestaurarColoresOriginales()
     {
-        Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
+        foreach (var entry in coloresOriginales)
+        {
+            if (entry.Key != null) entry.Key.color = entry.Value;
+        }
+    }
 
+    private void ActualizarColor()
+    {
+        if (muebleSeleccionado == null) return;
+        Color nuevoColor = new Color(sliderR.value, sliderG.value, sliderB.value);
+        if (previewColor) previewColor.color = nuevoColor;
+
+        Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers)
         {
             foreach (Material mat in r.materials)
             {
-                if (coloresOriginales.TryGetValue(mat, out Color colorOriginal))
+                if (mat.HasProperty("_Color") || mat.HasProperty("_BaseColor"))
                 {
-                    mat.color = colorOriginal;
+                    mat.color = nuevoColor;
+                    // Actualizamos el diccionario para que el color persista al deseleccionar
+                    if (coloresOriginales.ContainsKey(mat)) coloresOriginales[mat] = nuevoColor;
                 }
             }
         }
     }
 
-    // ─── Navegacion de subpaneles ─────────────────────────
-
-    public void AbrirPanelMover()
-    {
-        CerrarSubPaneles();
-        subPanelMover.SetActive(true);
-    }
-
-    public void AbrirPanelRotar()
-    {
-        CerrarSubPaneles();
-        subPanelRotar.SetActive(true);
-    }
-
-    public void AbrirPanelColor()
-    {
-        CerrarSubPaneles();
-        subPanelColor.SetActive(true);
-    }
-
-    private void CerrarSubPaneles()
-    {
-        DetenerTodo();
-        if (subPanelMover) subPanelMover.SetActive(false);
-        if (subPanelRotar) subPanelRotar.SetActive(false);
-        if (subPanelColor) subPanelColor.SetActive(false);
-    }
-
-    // ─── Botones de movimiento (PointerDown / PointerUp) ──
-
-    public void PresionarAdelante(bool estado) => moviendoAdelante = estado;
-    public void PresionarAtras(bool estado) => moviendoAtras = estado;
-    public void PresionarIzquierda(bool estado) => moviendoIzquierda = estado;
-    public void PresionarDerecha(bool estado) => moviendoDerecha = estado;
-
-    // ─── Botones de rotacion ──────────────────────────────
-
-    public void PresionarRotarIzquierda(bool estado) => rotandoIzquierda = estado;
-    public void PresionarRotarDerecha(bool estado) => rotandoDerecha = estado;
-
-    private void DetenerTodo()
-    {
-        moviendoAdelante = moviendoAtras = false;
-        moviendoIzquierda = moviendoDerecha = false;
-        rotandoIzquierda = rotandoDerecha = false;
-    }
-
-    // ─── Color ────────────────────────────────────────────
-
-    private void ActualizarColor()
-    {
-        if (muebleSeleccionado == null) return;
-
-        Color color = new Color(sliderR.value, sliderG.value, sliderB.value);
-
-        if (previewColor) previewColor.color = color;
-
-        Renderer[] renderers = muebleSeleccionado.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in renderers)
-        {
-            Material[] mats = r.materials;
-            foreach (Material mat in mats)
-                mat.color = color;
-            r.materials = mats;
-        }
-    }
-
     private bool PosicionEsValida(Vector3 posicion)
     {
-        // Proyecta desde arriba hacia abajo para verificar si hay plano debajo
-        Vector2 posicionPantalla = arCamera.WorldToScreenPoint(posicion);
+        if (Application.isEditor) return true; // Permitir movimiento libre en PC
 
-        if (raycastManager.Raycast(posicionPantalla, hitsMovimiento, TrackableType.PlaneWithinPolygon))
-        {
-            return true;
-        }
-        return false;
+        Vector2 posicionPantalla = arCamera.WorldToScreenPoint(posicion);
+        return raycastManager.Raycast(posicionPantalla, hitsMovimiento, TrackableType.PlaneWithinPolygon);
     }
+
+    // Navegación y Botones
+    public void AbrirPanelMover() { CerrarSubPaneles(); subPanelMover.SetActive(true); }
+    public void AbrirPanelRotar() { CerrarSubPaneles(); subPanelRotar.SetActive(true); }
+    public void AbrirPanelColor() { CerrarSubPaneles(); subPanelColor.SetActive(true); }
+    private void CerrarSubPaneles() { DetenerTodo(); subPanelMover.SetActive(false); subPanelRotar.SetActive(false); subPanelColor.SetActive(false); }
+    public void PresionarAdelante(bool e) => moviendoAdelante = e;
+    public void PresionarAtras(bool e) => moviendoAtras = e;
+    public void PresionarIzquierda(bool e) => moviendoIzquierda = e;
+    public void PresionarDerecha(bool e) => moviendoDerecha = e;
+    public void PresionarRotarIzquierda(bool e) => rotandoIzquierda = e;
+    public void PresionarRotarDerecha(bool e) => rotandoDerecha = e;
+    private void DetenerTodo() => moviendoAdelante = moviendoAtras = moviendoIzquierda = moviendoDerecha = rotandoIzquierda = rotandoDerecha = false;
 }

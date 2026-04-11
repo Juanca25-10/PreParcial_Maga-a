@@ -14,15 +14,17 @@ public class FurnitureSelector : MonoBehaviour
 
     void Update()
     {
+        if (arCamera == null || interaction == null) return;
+
         Vector2 centroPantalla = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = arCamera.ScreenPointToRay(centroPantalla);
 
         if (Physics.Raycast(ray, out RaycastHit hit, distanciaMaxima, capaMuebles))
         {
-            // --- DIBUJAR RAYO VERDE (Chocando) ---
             Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
 
             Transform root = hit.transform;
+            // Busca hacia arriba hasta encontrar el objeto que tiene el script de interacción
             while (root.parent != null && root.GetComponent<FurnitureInteraction>() == null)
             {
                 root = root.parent;
@@ -38,7 +40,6 @@ public class FurnitureSelector : MonoBehaviour
         }
         else
         {
-            // --- DIBUJAR RAYO ROJO (Perdido) ---
             Debug.DrawRay(ray.origin, ray.direction * distanciaMaxima, Color.red);
 
             if (muebleMirandoActualmente != null)
