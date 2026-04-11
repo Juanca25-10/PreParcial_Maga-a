@@ -19,6 +19,9 @@ public class FurnitureSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, distanciaMaxima, capaMuebles))
         {
+            // --- DIBUJAR RAYO VERDE (Chocando) ---
+            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
+
             Transform root = hit.transform;
             while (root.parent != null && root.GetComponent<FurnitureInteraction>() == null)
             {
@@ -35,6 +38,9 @@ public class FurnitureSelector : MonoBehaviour
         }
         else
         {
+            // --- DIBUJAR RAYO ROJO (Perdido) ---
+            Debug.DrawRay(ray.origin, ray.direction * distanciaMaxima, Color.red);
+
             if (muebleMirandoActualmente != null)
             {
                 interaction.Deseleccionar();
