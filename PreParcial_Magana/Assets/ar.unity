@@ -439,8 +439,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSpaceUIController
   arCamera: {fileID: 1701915455}
-  margenExtra: 0.4
-  alturaOffset: 0.15
+  distanciaAlObjeto: 0.6
+  alturaOffset: 0.5
   duracionAnimacion: 0.25
 --- !u!114 &164694991
 MonoBehaviour:
@@ -1283,7 +1283,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
