@@ -47,19 +47,19 @@ public class SessionUIController : MonoBehaviour
 
     void Update()
     {
-        // Mantenemos el texto del presupuesto actualizado
-        ActualizarTextoPresupuesto();
+        // Si el panel de bienvenida está apagado, actualizamos el HUD constantemente
+        if (!panelBienvenida.activeSelf)
+        {
+            ActualizarTextoPresupuesto();
+        }
     }
 
     private void ActualizarTextoPresupuesto()
     {
         if (textoPresupuestoRestante != null)
         {
-            textoPresupuestoRestante.text = $"${BudgetManager.Instance.presupuestoRestante:F2}";
-
-            // Opcional: Cambiar a rojo si queda poco dinero
-            if (BudgetManager.Instance.presupuestoRestante < 50)
-                textoPresupuestoRestante.color = Color.red;
+            // Usamos :N0 para que se vea como moneda sin decimales, o :F2 para dos decimales
+            textoPresupuestoRestante.text = "Presupuesto: $" + BudgetManager.Instance.presupuestoRestante.ToString("N0");
         }
     }
 

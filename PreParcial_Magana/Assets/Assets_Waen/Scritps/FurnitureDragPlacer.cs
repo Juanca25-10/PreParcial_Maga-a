@@ -115,15 +115,40 @@ public class FurnitureDragPlacer : MonoBehaviour
 
     private void ConfirmarColocacion()
     {
-        Instantiate(prefabActual,
-            previewInstance.transform.position,
-            previewInstance.transform.rotation);
+        // 1. Buscamos los datos del presupuesto en el prefab
+        FurnitureData info = prefabActual.GetComponent<FurnitureData>();
 
-        Debug.Log("Mueble colocado en: " + previewInstance.transform.position);
+        if (info != null)
+        {
+            // 2. Validamos con el BudgetManager
+            if (BudgetManager.Instance.PuedeComprar(info.precio))
+            {
+                // 3. Si hay plata, instanciamos de verdad
+                GameObject muebleReal = Instantiate(prefabActual,
+                    previewInstance.transform.position,
+                    previewInstance.transform.rotation);
 
-        Destroy(previewInstance);
-        previewInstance = null;
-        modoColocacion = false;
+                // 4. Registramos la compra para que se reste el dinero
+                BudgetManager.Instance.RegistrarCompra(muebleReal, info.precio);
+
+                Debug.Log($"Mueble colocado: {info.nombreMueble}. Restante: {BudgetManager.Instance.presupuestoRestante}");
+
+                // Limpieza normal del script
+                Destroy(previewInstance);
+                previewInstance = null;
+                modoColocacion = false;
+            }
+            else
+            {
+                // 5. Feedback de que no hay dinero
+                Debug.LogWarning("¡Presupuesto insuficiente!");
+                // Opcional: Podrías destruir la preview aquí si quieres cancelar
+            }
+        }
+        else
+        {
+            Debug.LogError("El prefab no tiene el componente FurnitureData. ¡No puedo saber el precio!");
+        }
     }
 
 
