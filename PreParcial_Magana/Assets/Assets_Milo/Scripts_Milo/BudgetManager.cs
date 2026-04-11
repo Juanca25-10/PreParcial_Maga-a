@@ -14,11 +14,6 @@ public class BudgetManager : MonoBehaviour
     [Header("Estado Actual")]
     private List<GameObject> mueblesEnEscena = new List<GameObject>();
 
-    [Header("UI Historial")]
-    [SerializeField] private GameObject prefabTarjeta;
-    [SerializeField] private Transform contenedorMatriz;
-    [SerializeField] private GameObject panelHistorial;
-
     // Lista de versiones (Opciones de diseño)
     public List<VersionDiseño> historialVersiones = new List<VersionDiseño>();
 
@@ -57,29 +52,28 @@ public class BudgetManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        // 1. Captura
+        // 1. Tomar captura
         Texture2D captura = ScreenCapture.CaptureScreenshotAsTexture();
 
-        // 2. Crear Datos (POO)
+        // 2. Crear la versión (POO)
         VersionDiseño nuevaVersion = new VersionDiseño
         {
             numeroOpcion = historialVersiones.Count + 1,
             costoTotal = presupuestoInicial - presupuestoRestante,
-            foto = captura
+            foto = captura,
+            mueblesUsados = new List<string>()
         };
 
+        // 3. Listar qué muebles se usaron
+        foreach (GameObject g in mueblesEnEscena)
+        {
+            var data = g.GetComponent<FurnitureData>();
+            if (data) nuevaVersion.mueblesUsados.Add(data.nombreMueble);
+        }
+
         historialVersiones.Add(nuevaVersion);
-
-        // 3. Crear la Tarjeta en la UI
-        GameObject nuevaCard = Instantiate(prefabTarjeta, contenedorMatriz);
-        nuevaCard.GetComponent<CotizacionCard>().Configurar(nuevaVersion);
-
-        // 4. Mostrar el panel de historial
-        panelHistorial.SetActive(true);
+        Debug.Log($"¡Opción {nuevaVersion.numeroOpcion} guardada!");
     }
-
-
-
 }
 
 [System.Serializable]
