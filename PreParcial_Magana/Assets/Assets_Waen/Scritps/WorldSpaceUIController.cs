@@ -55,9 +55,9 @@ public class WorldSpaceUIController : MonoBehaviour
     {
         objetoSeguido = objetivo;
         colliderObjetivo = objetivo.GetComponentInChildren<Collider>();
-
         activo = true;
         gameObject.SetActive(true);
+        GetComponent<AdditionalSettingsAnimator>()?.AnimarEntrada();
         StopAllCoroutines();
         StartCoroutine(AnimarEntrada());
     }

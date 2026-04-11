@@ -1086,6 +1086,7 @@ GameObject:
   - component: {fileID: 164694991}
   - component: {fileID: 164694990}
   - component: {fileID: 164694995}
+  - component: {fileID: 164694996}
   m_Layer: 5
   m_Name: CanvasWorldUI
   m_TagString: Untagged
@@ -1212,6 +1213,39 @@ MonoBehaviour:
   inputPresupuesto: {fileID: 397630389}
   textoPresupuestoRestante: {fileID: 341559648}
   botonTerminar: {fileID: 887774411}
+--- !u!114 &164694996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164694989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf17e57fac89ab4da6094980dd0a764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdditionalSettingsAnimator
+  botonesPrincipales:
+  - {fileID: 1462713350}
+  - {fileID: 2088700747}
+  - {fileID: 250231644}
+  subPaneles:
+  - {fileID: 1894165398}
+  - {fileID: 113087022}
+  - {fileID: 1613261652}
+  textosAnimados:
+  - {fileID: 956686557}
+  - {fileID: 1037874075}
+  - {fileID: 492278639}
+  - {fileID: 355917824}
+  delayInicial: 0.15
+  duracionFade: 0.45
+  delayEntreTextos: 0.05
+  delayEntreBotones: 0.08
+  duracionTransicion: 0.4
+  offsetSlideBotones: 60
+  offsetSlidePanel: 80
+  offsetSlideTextos: 30
 --- !u!1 &215142478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1592,7 +1626,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 215142483}
         m_TargetAssemblyTypeName: FurnitureInteraction, Assembly-CSharp
         m_MethodName: AbrirPanelColor
         m_Mode: 1
@@ -1604,7 +1638,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 164694996}
         m_TargetAssemblyTypeName: AdditionalSettingsAnimator, Assembly-CSharp
         m_MethodName: AlPresionarBoton
         m_Mode: 3
@@ -2995,7 +3029,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3487,7 +3521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000076293945, y: 70.49}
+  m_AnchoredPosition: {x: 0, y: 70}
   m_SizeDelta: {x: 0, y: -137.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &529706935
@@ -8059,7 +8093,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 215142483}
         m_TargetAssemblyTypeName: FurnitureInteraction, Assembly-CSharp
         m_MethodName: AbrirPanelMover
         m_Mode: 1
@@ -8071,7 +8105,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 164694996}
         m_TargetAssemblyTypeName: AdditionalSettingsAnimator, Assembly-CSharp
         m_MethodName: AlPresionarBoton
         m_Mode: 3
@@ -8155,7 +8189,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.1712265, y: -70.44}
+  m_AnchoredPosition: {x: 0.17123413, y: -70}
   m_SizeDelta: {x: 0.34253, y: -137.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1464470117
@@ -11034,7 +11068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1894165398
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12537,7 +12571,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 215142483}
         m_TargetAssemblyTypeName: FurnitureInteraction, Assembly-CSharp
         m_MethodName: AbrirPanelRotar
         m_Mode: 1
@@ -12549,7 +12583,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 164694996}
         m_TargetAssemblyTypeName: AdditionalSettingsAnimator, Assembly-CSharp
         m_MethodName: AlPresionarBoton
         m_Mode: 3
