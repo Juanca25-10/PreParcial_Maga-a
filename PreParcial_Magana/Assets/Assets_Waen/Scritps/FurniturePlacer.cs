@@ -1,4 +1,4 @@
-Ôªøusing UnityEngine;
+using UnityEngine;
 
 public class FurniturePlacer : MonoBehaviour
 {
@@ -16,9 +16,8 @@ public class FurniturePlacer : MonoBehaviour
             if (BudgetManager.Instance.PuedeComprar(info.precio))
             {
                 GameObject nuevo = Instantiate(mueblePrefab, pose.position, pose.rotation);
-                FurnitureRenderSetup.Configurar(nuevo);
 
-                // 2. ¬°ESTA L√çNEA ES CLAVE! Registra el gasto
+                // 2. °ESTA LÕNEA ES CLAVE! Registra el gasto
                 BudgetManager.Instance.RegistrarCompra(nuevo, info.precio);
 
                 Debug.Log($"Se restaron ${info.precio}. Quedan: ${BudgetManager.Instance.presupuestoRestante}");
@@ -30,4 +29,3 @@ public class FurniturePlacer : MonoBehaviour
         }
     }
 }
-

@@ -14,6 +14,11 @@ public class BudgetManager : MonoBehaviour
     [Header("Estado Actual")]
     private List<GameObject> mueblesEnEscena = new List<GameObject>();
 
+    [Header("UI Historial")]
+    [SerializeField] private GameObject prefabTarjeta;
+    [SerializeField] private Transform contenedorMatriz;
+    [SerializeField] private GameObject panelHistorial;
+
     // Lista de versiones (Opciones de diseño)
     public List<VersionDiseño> historialVersiones = new List<VersionDiseño>();
 
@@ -43,37 +48,94 @@ public class BudgetManager : MonoBehaviour
         Debug.Log($"Compra exitosa. Quedan: ${presupuestoRestante}");
     }
 
+    private bool estaGuardando = false; // Bandera para evitar el doble clic y duplicados
+
     public void GuardarVersion()
     {
+        // Si ya se está procesando una captura, no permitas otra
+        if (estaGuardando) return;
+
         StartCoroutine(ProcesoGuardarVersion());
     }
 
     private IEnumerator ProcesoGuardarVersion()
     {
+        estaGuardando = true;
+
+        // Esperamos al final del frame para que la captura no salga con menús parpadeando
         yield return new WaitForEndOfFrame();
 
-        // 1. Tomar captura
+        // 1. Captura de pantalla
         Texture2D captura = ScreenCapture.CaptureScreenshotAsTexture();
 
-        // 2. Crear la versión (POO)
+        // 2. Crear Datos (POO)
         VersionDiseño nuevaVersion = new VersionDiseño
         {
             numeroOpcion = historialVersiones.Count + 1,
+            // Calculamos cuánto se gastó realmente
             costoTotal = presupuestoInicial - presupuestoRestante,
-            foto = captura,
-            mueblesUsados = new List<string>()
+            foto = captura
         };
 
-        // 3. Listar qué muebles se usaron
-        foreach (GameObject g in mueblesEnEscena)
+        historialVersiones.Add(nuevaVersion);
+
+        // 3. Crear la Tarjeta en la UI
+        if (prefabTarjeta != null && contenedorMatriz != null)
         {
-            var data = g.GetComponent<FurnitureData>();
-            if (data) nuevaVersion.mueblesUsados.Add(data.nombreMueble);
+            GameObject nuevaCard = Instantiate(prefabTarjeta, contenedorMatriz);
+
+            // Verificamos que el componente exista para evitar el NullReference
+            CotizacionCard scriptCard = nuevaCard.GetComponent<CotizacionCard>();
+            if (scriptCard != null)
+            {
+                scriptCard.Configurar(nuevaVersion);
+            }
+            else
+            {
+                Debug.LogError("¡El prefab de la tarjeta no tiene el script CotizacionCard!");
+            }
         }
 
-        historialVersiones.Add(nuevaVersion);
-        Debug.Log($"¡Opción {nuevaVersion.numeroOpcion} guardada!");
+        // 4. Mostrar el panel de historial
+        if (panelHistorial != null)
+        {
+            panelHistorial.SetActive(true);
+        }
+
+        estaGuardando = false; // Liberamos el bloqueo
     }
+
+    public void IniciarNuevaCotizacion()
+    {
+        // 1. Buscamos todos los objetos en la escena
+        GameObject[] todosLosObjetos = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+
+        // Obtenemos el número de la capa por su nombre
+        int layerMuebles = LayerMask.NameToLayer("capaMuebles");
+
+        foreach (GameObject m in todosLosObjetos)
+        {
+            // Si el objeto pertenece a la capa "capaMuebles", lo borramos
+            if (m.layer == layerMuebles)
+            {
+                Destroy(m);
+            }
+        }
+
+        // 2. Resetear el presupuesto al valor inicial
+        presupuestoRestante = presupuestoInicial;
+
+        // 3. Limpiar la lista interna
+        mueblesEnEscena.Clear();
+
+        // 4. Cerramos panel
+        panelHistorial.SetActive(false);
+
+        Debug.Log("Escena limpia usando capas. ¡Nueva cotización iniciada!");
+    }
+
+
+
 }
 
 [System.Serializable]
