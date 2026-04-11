@@ -7,16 +7,25 @@ public class FurniturePlacer : MonoBehaviour
 
     public void ColocarMueble(Pose pose)
     {
+        // Buscamos el precio en el prefab que vamos a instanciar
         FurnitureData info = mueblePrefab.GetComponent<FurnitureData>();
 
-        if (info != null && BudgetManager.Instance.PuedeComprar(info.precio))
+        if (info != null)
         {
-            GameObject nuevo = Instantiate(mueblePrefab, pose.position, pose.rotation);
-            BudgetManager.Instance.RegistrarCompra(nuevo, info.precio);
-        }
-        else
-        {
-            Debug.LogWarning("¡No tienes plata o el prefab no tiene FurnitureData!");
+            // 1. Validamos con el Manager ANTES de instanciar
+            if (BudgetManager.Instance.PuedeComprar(info.precio))
+            {
+                GameObject nuevo = Instantiate(mueblePrefab, pose.position, pose.rotation);
+
+                // 2. ¡ESTA LÍNEA ES CLAVE! Registra el gasto
+                BudgetManager.Instance.RegistrarCompra(nuevo, info.precio);
+
+                Debug.Log($"Se restaron ${info.precio}. Quedan: ${BudgetManager.Instance.presupuestoRestante}");
+            }
+            else
+            {
+                Debug.LogWarning("No tienes suficiente presupuesto para este mueble.");
+            }
         }
     }
 }
