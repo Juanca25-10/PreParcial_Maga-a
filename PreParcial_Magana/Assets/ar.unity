@@ -859,6 +859,8 @@ MonoBehaviour:
   arCamera: {fileID: 1701915455}
   worldUI: {fileID: 164694990}
   colorResalte: {r: 0.2, g: 0.6, b: 1, a: 1}
+  mezclaBaseResalte: 0.18
+  emisionResalte: 1.8
 --- !u!114 &215142484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1881,7 +1883,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
