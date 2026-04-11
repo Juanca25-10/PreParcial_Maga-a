@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -19,6 +19,9 @@ public class FurnitureDragPlacer : MonoBehaviour
     private GameObject prefabActual;
     private bool modoColocacion = false;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+    [Header("Menu")]
+    [SerializeField] private MenuPanelController menuController; // ← campo nuevo
 
     // Evita que el toque del menu tambien coloque el mueble
     private int frameSeleccion = -1;
@@ -110,6 +113,8 @@ public class FurnitureDragPlacer : MonoBehaviour
         modoColocacion = true;
         frameSeleccion = Time.frameCount;
 
+        menuController?.AlSeleccionarMueble(); // ← fade out del panel
+
         Debug.Log("Preview creado, mueve el celular y toca para colocar");
     }
 
@@ -141,14 +146,24 @@ public class FurnitureDragPlacer : MonoBehaviour
             else
             {
                 // 5. Feedback de que no hay dinero
-                Debug.LogWarning("�Presupuesto insuficiente!");
-                // Opcional: Podr�as destruir la preview aqu� si quieres cancelar
+                Debug.LogWarning("¡Presupuesto insuficiente!");
+                // Opcional: Podrías destruir la preview aquí si quieres cancelar
             }
         }
         else
         {
-            Debug.LogError("El prefab no tiene el componente FurnitureData. �No puedo saber el precio!");
+            Debug.LogError("El prefab no tiene el componente FurnitureData. ¡No puedo saber el precio!");
         }
+        menuController?.AlDeseleccionar(); // ← fade in del panel al colocar
+    }
+
+    public void CancelarColocacion()
+    {
+        if (previewInstance != null)
+            Destroy(previewInstance);
+        previewInstance = null;
+        modoColocacion = false;
+        menuController?.AlDeseleccionar(); // ← fade in del panel
     }
 
 

@@ -20,6 +20,10 @@ public class FurnitureInteraction : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Slider sliderB;
     [SerializeField] private UnityEngine.UI.Image previewColor;
 
+    [Header("Menu Principal")]
+    [Tooltip("Arrastra el GameObject que tiene MenuPanelController")]
+    [SerializeField] private MenuPanelController menuController;
+
     private List<ARRaycastHit> hitsMovimiento = new List<ARRaycastHit>();
     private Vector3 ultimaPosicionValida;
 
@@ -96,6 +100,7 @@ public class FurnitureInteraction : MonoBehaviour
         CerrarSubPaneles();
         worldUI.Mostrar(mueble.transform);
         AplicarResalteAzul();
+        menuController?.AlSeleccionarMueble();
     }
 
     public void Deseleccionar()
@@ -105,6 +110,7 @@ public class FurnitureInteraction : MonoBehaviour
         worldUI.Ocultar();
         CerrarSubPaneles();
         DetenerTodo();
+        menuController?.AlDeseleccionar();
     }
 
     private void AplicarResalteAzul()
