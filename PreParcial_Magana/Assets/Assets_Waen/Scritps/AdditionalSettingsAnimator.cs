@@ -214,29 +214,12 @@ public class AdditionalSettingsAnimator : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Botones suben y desaparecen → sub-panel aparece desde abajo.
+    /// Sub-panel aparece desde abajo. Botones no se mueven.
     /// </summary>
     IEnumerator AbrirSubPanel(int indice)
     {
         enTransicion = true;
 
-        // — Botones salen hacia ARRIBA —
-        float mid = duracionTransicion * 0.55f;
-        foreach (var btn in botonesPrincipales)
-        {
-            if (btn == null) continue;
-            StartCoroutine(DeslizarFade(
-                btn,
-                btn.anchoredPosition,
-                btn.anchoredPosition + new Vector2(0f, offsetSlideBotones),
-                0f, mid,
-                EaseInCubic
-            ));
-        }
-
-        yield return new WaitForSeconds(mid * 0.7f);
-
-        // — Sub-panel entra desde ABAJO —
         var panel = subPaneles[indice];
         var cg = EnsureCanvasGroup(panel);
         cg.interactable = true;
@@ -255,7 +238,7 @@ public class AdditionalSettingsAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// Sub-panel sube y desaparece → botones bajan y aparecen.
+    /// Sub-panel se oculta. Botones no se mueven.
     /// </summary>
     IEnumerator CerrarSubPanel()
     {
@@ -263,50 +246,29 @@ public class AdditionalSettingsAnimator : MonoBehaviour
         int indiceCierre = panelActivo;
         panelActivo = -1;
 
-        // — Sub-panel sale hacia ARRIBA —
         var panel = subPaneles[indiceCierre];
+
         StartCoroutine(DeslizarFade(
             panel,
             panel.anchoredPosition,
-            panel.anchoredPosition + new Vector2(0f, offsetSlidePanel),
+            panel.anchoredPosition + new Vector2(0f, -offsetSlidePanel),
             1f, 0f,
             duracionTransicion * 0.5f,
             EaseInCubic
         ));
 
-        yield return new WaitForSeconds(duracionTransicion * 0.35f);
+        yield return new WaitForSeconds(duracionTransicion * 0.5f);
 
-        // Deshabilitar interacción del sub-panel
-        EnsureCanvasGroup(panel).interactable = false;
-        EnsureCanvasGroup(panel).blocksRaycasts = false;
-
-        // — Botones vuelven desde ABAJO —
-        float dur = duracionTransicion * 0.65f;
-        for (int i = 0; i < botonesPrincipales.Count; i++)
-        {
-            var btn = botonesPrincipales[i];
-            if (btn == null) continue;
-
-            // Resetear posición al estado "oculto arriba" para volver a la original
-            Vector2 posArriba = posOriginalBotones[i] + new Vector2(0f, offsetSlideBotones);
-            Vector2 posDestino = posOriginalBotones[i];
-            btn.anchoredPosition = posArriba;
-            EnsureCanvasGroup(btn).alpha = 0f;
-
-            StartCoroutine(DeslizarFade(btn, posArriba, posDestino, 0f, 1f, dur, EaseOutQuart));
-            yield return new WaitForSeconds(delayEntreBotones);
-        }
-
-        yield return new WaitForSeconds(dur);
-
-        // Resetear posición del sub-panel
+        var cg = EnsureCanvasGroup(panel);
+        cg.interactable = false;
+        cg.blocksRaycasts = false;
         panel.anchoredPosition = posOriginalSubPaneles[indiceCierre] + new Vector2(0f, -offsetSlidePanel);
 
         enTransicion = false;
     }
 
     /// <summary>
-    /// Cierra el panel actual y abre el nuevo sin pasar por la vista de botones.
+    /// Swap directo entre sub-paneles. Botones no se mueven.
     /// </summary>
     IEnumerator CambiarSubPanel(int nuevoIndice)
     {
@@ -314,12 +276,12 @@ public class AdditionalSettingsAnimator : MonoBehaviour
         int indiceAnterior = panelActivo;
         panelActivo = -1;
 
-        // — Panel actual sale hacia ARRIBA —
+        // Panel viejo sale hacia abajo
         var panelViejo = subPaneles[indiceAnterior];
         StartCoroutine(DeslizarFade(
             panelViejo,
             panelViejo.anchoredPosition,
-            panelViejo.anchoredPosition + new Vector2(0f, offsetSlidePanel),
+            panelViejo.anchoredPosition + new Vector2(0f, -offsetSlidePanel),
             1f, 0f,
             duracionTransicion * 0.4f,
             EaseInCubic
@@ -327,11 +289,12 @@ public class AdditionalSettingsAnimator : MonoBehaviour
 
         yield return new WaitForSeconds(duracionTransicion * 0.3f);
 
-        EnsureCanvasGroup(panelViejo).interactable = false;
-        EnsureCanvasGroup(panelViejo).blocksRaycasts = false;
+        var cgViejo = EnsureCanvasGroup(panelViejo);
+        cgViejo.interactable = false;
+        cgViejo.blocksRaycasts = false;
         panelViejo.anchoredPosition = posOriginalSubPaneles[indiceAnterior] + new Vector2(0f, -offsetSlidePanel);
 
-        // — Nuevo panel entra desde ABAJO —
+        // Panel nuevo entra desde abajo
         var panelNuevo = subPaneles[nuevoIndice];
         var cgNuevo = EnsureCanvasGroup(panelNuevo);
         cgNuevo.interactable = true;
