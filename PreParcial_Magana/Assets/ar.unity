@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureInteraction
   raycastManager: {fileID: 889205848}
-  panelInteraccion: {fileID: 1863846756}
+  panelInteraccion: {fileID: 2077394434}
   subPanelMover: {fileID: 1648452574}
   subPanelRotar: {fileID: 894223850}
   subPanelColor: {fileID: 1517366976}
