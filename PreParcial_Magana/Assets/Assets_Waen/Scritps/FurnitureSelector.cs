@@ -8,7 +8,7 @@ public class FurnitureSelector : MonoBehaviour
 
     [Header("Configuración de Selección")]
     [SerializeField] private LayerMask capaMuebles;
-    [SerializeField] private float distanciaMaxima = 5f;
+    [SerializeField] private float distanciaMaxima = 25f;
 
     private GameObject muebleMirandoActualmente = null;
 
@@ -19,22 +19,23 @@ public class FurnitureSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, distanciaMaxima, capaMuebles))
         {
-            Transform root = hit.transform;
-            while (root.parent != null && root.GetComponent<FurnitureInteraction>() == null)
-            {
-                root = root.parent;
-            }
+            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
 
-            GameObject muebleDetectado = root.gameObject;
+            // Obtenemos el objeto que tocamos (el comedor, la silla, etc.)
+            GameObject muebleDetectado = hit.transform.gameObject;
 
             if (muebleMirandoActualmente != muebleDetectado)
             {
+                Debug.Log($"<color=cyan>Selector:</color> Raycast tocó {muebleDetectado.name}. Avisando al Manager.");
+
+                // LLAMADA DIRECTA AL MANAGER (AR_Managers)
                 interaction.SeleccionarMueble(muebleDetectado);
                 muebleMirandoActualmente = muebleDetectado;
             }
         }
         else
         {
+            Debug.DrawRay(ray.origin, ray.direction * distanciaMaxima, Color.red);
             if (muebleMirandoActualmente != null)
             {
                 interaction.Deseleccionar();

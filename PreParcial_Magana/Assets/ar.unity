@@ -419,6 +419,8 @@ GameObject:
   - component: {fileID: 164694992}
   - component: {fileID: 164694991}
   - component: {fileID: 164694990}
+  - component: {fileID: 164694995}
+  - component: {fileID: 164694996}
   m_Layer: 5
   m_Name: CanvasWorldUI
   m_TagString: Untagged
@@ -439,7 +441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSpaceUIController
   arCamera: {fileID: 1701915455}
-  distanciaAlObjeto: 0.6
+  distanciaAlObjeto: 1.3
   alturaOffset: 0.5
   duracionAnimacion: 0.25
 --- !u!114 &164694991
@@ -528,6 +530,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &164694995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164694989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.TrackedDeviceGraphicRaycaster
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  m_RaycastTriggerInteraction: 1
+--- !u!225 &164694996
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164694989}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &184501967
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,8 +819,8 @@ MonoBehaviour:
   arCamera: {fileID: 1701915455}
   capaMuebles:
     serializedVersion: 2
-    m_Bits: 0
-  distanciaMaxima: 5
+    m_Bits: 8
+  distanciaMaxima: 6
 --- !u!1 &236827509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1283,7 +1316,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
