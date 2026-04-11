@@ -58,6 +58,7 @@ public class WorldSpaceUIController : MonoBehaviour
 
         activo = true;
         gameObject.SetActive(true);
+        GetComponent<AdditionalSettingsAnimator>()?.AnimarEntrada();
         StopAllCoroutines();
         StartCoroutine(AnimarEntrada());
     }
