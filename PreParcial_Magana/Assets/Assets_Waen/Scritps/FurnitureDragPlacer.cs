@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -128,6 +128,8 @@ public class FurnitureDragPlacer : MonoBehaviour
                     previewInstance.transform.position,
                     previewInstance.transform.rotation);
 
+                FurnitureRenderSetup.Configurar(muebleReal);
+
                 // 4. Registramos la compra para que se reste el dinero
                 BudgetManager.Instance.RegistrarCompra(muebleReal, info.precio);
 
@@ -141,15 +143,16 @@ public class FurnitureDragPlacer : MonoBehaviour
             else
             {
                 // 5. Feedback de que no hay dinero
-                Debug.LogWarning("¡Presupuesto insuficiente!");
-                // Opcional: Podrías destruir la preview aquí si quieres cancelar
+                Debug.LogWarning("Â¡Presupuesto insuficiente!");
+                // Opcional: PodrÃ­as destruir la preview aquÃ­ si quieres cancelar
             }
         }
         else
         {
-            Debug.LogError("El prefab no tiene el componente FurnitureData. ¡No puedo saber el precio!");
+            Debug.LogError("El prefab no tiene el componente FurnitureData. Â¡No puedo saber el precio!");
         }
     }
 
 
 }
+

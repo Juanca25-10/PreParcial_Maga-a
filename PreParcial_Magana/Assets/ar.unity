@@ -1948,7 +1948,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 117821078}
   m_HandleRect: {fileID: 117821077}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -7350,6 +7350,7 @@ GameObject:
   - component: {fileID: 1701915451}
   - component: {fileID: 1701915457}
   - component: {fileID: 1701915456}
+  - component: {fileID: 1701915458}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7503,7 +7504,7 @@ MonoBehaviour:
   m_LightEstimationMode: -1
   m_AutoFocus: 1
   m_ImageStabilization: 0
-  m_LightEstimation: 0
+  m_LightEstimation: 31
   m_FacingDirection: 1
   m_RenderMode: 0
 --- !u!81 &1701915454
@@ -7625,6 +7626,29 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1701915458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701915449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b191fc6f2217e4da374e53468524f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AREnvironmentLightController
+  arCameraManager: {fileID: 1701915453}
+  directionalLight: {fileID: 1490092304}
+  actualizarLuzDireccional: 1
+  actualizarLuzAmbiente: 1
+  intensidadMinima: 0.03
+  intensidadMaxima: 2.2
+  intensidadReflejos: 1.1
+  usarTemperaturaColor: 1
+  temperaturaMinima: 1800
+  temperaturaMaxima: 12000
+  suavizado: 8
 --- !u!1 &1747893288
 GameObject:
   m_ObjectHideFlags: 0
